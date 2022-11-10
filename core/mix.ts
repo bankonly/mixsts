@@ -4,7 +4,8 @@ import morgan from "morgan"
 import { Application } from "express";
 import ContextRouter from "./router";
 import cors from "cors"
-import { useSocket } from "./socket";
+import SocketServer, { useSocket } from "./socket";
+import { recovery } from "./errors";
 
 export default class MixServer {
     constructor() {
@@ -21,6 +22,9 @@ export default class MixServer {
         // router mapping
         const contextRouter: ContextRouter = new ContextRouter()
         app.use(contextRouter.register()) // register controller router from decorators
+
+        // register error handlers
+        app.use(recovery)
     }
 
     run(callback?: any): void {
@@ -30,6 +34,9 @@ export default class MixServer {
         // start socket server
         if (coreConfig.socket) {
             useSocket(server, coreConfig.socket)
+
+            // initial socket
+            new SocketServer()
         }
     }
 

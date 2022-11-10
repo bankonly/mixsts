@@ -17,18 +17,21 @@ class ContextRouter {
             let handlerOpts = ctx.opts;
             let handleMiddleware = (_d = handlerOpts === null || handlerOpts === void 0 ? void 0 : handlerOpts.apply) !== null && _d !== void 0 ? _d : [];
             prefix = prefix + path;
+            let catcheOpts = {
+                emitUrl: handlerOpts === null || handlerOpts === void 0 ? void 0 : handlerOpts.ioEmit
+            };
             switch (ctx.method) {
                 case options_1.Method.Get:
-                    app_1.router.get(prefix, controllerMiddlewares, handleMiddleware, (0, common_1.catcher)(handler));
+                    app_1.router.get(prefix, controllerMiddlewares, handleMiddleware, (0, common_1.catcher)(handler, catcheOpts));
                     break;
                 case options_1.Method.Post:
-                    app_1.router.post(prefix, controllerMiddlewares, handleMiddleware, (0, common_1.catcher)(handler));
+                    app_1.router.post(prefix, controllerMiddlewares, handleMiddleware, (0, common_1.catcher)(handler, catcheOpts));
                     break;
                 case options_1.Method.Put:
-                    app_1.router.put(prefix, controllerMiddlewares, handleMiddleware, (0, common_1.catcher)(handler));
+                    app_1.router.put(prefix, controllerMiddlewares, handleMiddleware, (0, common_1.catcher)(handler, catcheOpts));
                     break;
                 case options_1.Method.Delete:
-                    app_1.router.delete(prefix, controllerMiddlewares, handleMiddleware, (0, common_1.catcher)(handler));
+                    app_1.router.delete(prefix, controllerMiddlewares, handleMiddleware, (0, common_1.catcher)(handler, catcheOpts));
                     break;
                 default: throw new Error("Invalid methods");
             }

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Get = exports.Controller = void 0;
+exports.Delete = exports.Put = exports.Post = exports.Get = exports.Controller = void 0;
 const app_1 = require("./app");
 const options_1 = require("./options");
 // controller decorator define path and option
@@ -26,3 +26,15 @@ function Get(path, opts) {
     return (target, key) => context(options_1.Method.Get, target, key, path, opts);
 }
 exports.Get = Get;
+function Post(path, opts) {
+    return (target, key) => context(options_1.Method.Post, target, key, path, opts);
+}
+exports.Post = Post;
+function Put(path, opts) {
+    return (target, key) => context(options_1.Method.Put, target, key, path, opts);
+}
+exports.Put = Put;
+function Delete(path, opts) {
+    return (target, key) => context(options_1.Method.Delete, target, key, path, opts);
+}
+exports.Delete = Delete;

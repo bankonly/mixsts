@@ -15,19 +15,45 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const context_1 = require("@mix/context");
-let IndexController = class IndexController {
-    index(context) {
+const socket_1 = require("@mix/socket");
+class Event {
+    onConnection(socket) {
         return __awaiter(this, void 0, void 0, function* () {
-            context.emit("datatat");
-            context.json("index controller");
+            const socketId = socket.id; // socket id
+            socket.context = socket.handshake.auth;
+            console.log("connected:", socketId);
         });
     }
-};
+    disconnect(socket) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("Disconnected:", socket.id);
+        });
+    }
+    chat(payload, socket) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(payload);
+            socket_1.io.to(socket.id).emit("message", "You're connected");
+            // your logic here
+        });
+    }
+    message(payload, socket) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(payload);
+            console.log(socket.id);
+            // your logic here
+        });
+    }
+}
 __decorate([
-    (0, context_1.Get)("/", { ioEmit: "index" })
-], IndexController.prototype, "index", null);
-IndexController = __decorate([
-    (0, context_1.Controller)("index")
-], IndexController);
-exports.default = IndexController;
+    (0, socket_1.OnConnection)()
+], Event.prototype, "onConnection", null);
+__decorate([
+    (0, socket_1.OnDisconnect)()
+], Event.prototype, "disconnect", null);
+__decorate([
+    (0, socket_1.OnEvent)("chat")
+], Event.prototype, "chat", null);
+__decorate([
+    (0, socket_1.OnEvent)("message")
+], Event.prototype, "message", null);
+exports.default = Event;

@@ -27,11 +27,15 @@ export interface ContextOption {
     ioEmit?: string
 }
 
+export interface SocketConfig {
+    require: NodeRequire[]
+}
 // Socket configuration
 export interface SocketOption {
     transports?: string[]
     enableConnectionLog?: boolean
     onCallback?: ((socket: any) => void)
+    events?: SocketConfig
 }
 
 export interface CatcherOption {

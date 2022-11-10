@@ -1,7 +1,5 @@
 import { ControllerConfig } from "./controller";
-interface SocketOption {
-    transports?: string[];
-}
+import { SocketOption } from "./options";
 export interface CoreConfig {
     port: number;
     enableRequestLog?: boolean;
@@ -11,4 +9,3 @@ export interface CoreConfig {
 }
 export declare let coreConfig: CoreConfig;
 export declare function setCoreConfig(config: CoreConfig): void;
-export {};

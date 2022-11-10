@@ -1,6 +1,6 @@
 import { setCoreConfig } from "@mix/config"
 import controllerConfig from "@configs/controllers";
-import { onConnection } from "libs/events/socket";
+import socketConfig from "./events";
 
 // Load all configuration here
 setCoreConfig({
@@ -8,7 +8,7 @@ setCoreConfig({
     socket: {
         transports: ["websocket"],
         enableConnectionLog: true,
-        onCallback: onConnection
+        events: socketConfig
     },
     enableRequestLog: true,
     controllerConfig: controllerConfig
