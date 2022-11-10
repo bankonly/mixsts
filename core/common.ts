@@ -1,0 +1,24 @@
+import { NextFunction, Response, Request } from "express";
+import { CatcherOption, Context } from "./options";
+import ApiResponse from "./response";
+
+export function catcher(handler: Function, opts?: CatcherOption): any {
+    return function(req: Request, res: Response, next: NextFunction) {
+        const response = new ApiResponse(res, opts?.emitUrl)
+        const context: Context = {
+            body: req.body,
+            query: req.query,
+            headers: req.headers,
+            params: req.params,
+            req, res, next,
+            response: response,
+            json: (arg: any) => res.json(arg),
+            emit: (arg: any) => response.emit(arg)
+        }
+        return Promise.resolve(handler(context)).catch(next)
+    }
+}
+
+export function display(...arg: any): void {
+    console.log(...arg)
+}
