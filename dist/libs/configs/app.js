@@ -6,14 +6,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("@mix/config");
 const controllers_1 = __importDefault(require("@configs/controllers"));
 const events_1 = __importDefault(require("./events"));
+const options_1 = require("@mix/options");
 // Load all configuration here
 (0, config_1.setCoreConfig)({
     port: 1999,
+    // use middlewares
+    uses: [
+    // example: cors() ---> from cors packages
+    ],
+    // enable socket event
     socket: {
         transports: ["websocket"],
         enableConnectionLog: true,
         events: events_1.default
     },
-    enableRequestLog: true,
-    controllerConfig: controllers_1.default
+    // Enable request log from client
+    enableRequestLog: {
+        // display original error from Error constructor
+        // ex: { message:"...",detail:"detail error" }
+        detail: true
+    },
+    controllerConfig: controllers_1.default,
+    // Database configuration with driver support only mongodb now
+    database: {
+        driver: options_1.DatabaseDriver.MongoDB,
+        host: "mongodb+srv://bank:Bank211998Tsc_@cluster0.ih5kz.mongodb.net/terena_core?retryWrites=true&w=majority",
+        // Uncomment to add mongo db connection option
+        // connectionOption: {}
+    }
 });

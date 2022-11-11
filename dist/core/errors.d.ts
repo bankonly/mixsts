@@ -12,11 +12,11 @@ export declare class CustomError extends Error {
 export declare class BadRequest extends Error {
     statusCode: number;
     msg: string;
-    constructor(opts?: ErrorOption);
+    constructor(message?: string);
 }
 export declare class Unauthorized extends Error {
     statusCode: number;
     msg: string;
-    constructor(opts?: ErrorOption);
+    constructor(message?: string);
 }
 export {};

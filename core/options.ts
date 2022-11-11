@@ -1,4 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"
+import { ConnectOptions } from "mongoose"
 import ApiResponse from "./response"
 
 export interface Context<Body = any, Query = any, Headers = any, Params = any> {
@@ -41,3 +42,19 @@ export interface SocketOption {
 export interface CatcherOption {
     emitUrl?: string
 }
+
+export interface SocketContext {
+    path?: string
+    apply: any
+}
+
+export enum DatabaseDriver {
+    MongoDB = "mongodb"
+}
+
+export interface DatabaseConfig {
+    driver: DatabaseDriver
+    host: string
+    connectionOption?: ConnectOptions
+}
+

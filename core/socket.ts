@@ -1,10 +1,11 @@
 import { Server } from "socket.io";
 import { display } from "./common";
-import { SocketConfig } from "./options";
+import { SocketConfig, SocketContext } from "./options";
 
 export let io: Server
 export let socketIo: any
 export let socketConfig: SocketConfig
+export let socketMiddlewares: any = []
 export let socketGroups: any = []
 enum SocketChannel {
     Connection = "connection",
@@ -19,6 +20,24 @@ export function useSocket(server: any, config: any): void {
     display("Socket: Started") // log message
 }
 
+// event middleware run first
+export function OnEventMiddleware(position: number) {
+    return function(target: any, key: string) {
+        socketMiddlewares.push({
+            position: position,
+            callback: function() {
+                io = io.use(async (socket: any, next: any) => {
+                    try {
+                        await target[key](socket, next)
+                    } catch (error) {
+                        next(error)
+                    }
+                })
+            }
+        })
+    }
+}
+
 async function onConnectionCacther(socket: any, handler: any) {
     try {
         await handler(socket)
@@ -28,12 +47,12 @@ async function onConnectionCacther(socket: any, handler: any) {
     }
 }
 
-export function OnConnection() {
+export function OnConnection(opts?: SocketContext) {
     return function(target: any, key: string) {
         socketGroups.push({
             channel: SocketChannel.Connection,
             callback: function() {
-                io.on("connection", (socket) => onConnectionCacther(socket, target[key]))
+                io.use(opts?.apply).on("connection", (socket) => onConnectionCacther(socket, target[key]))
             }
         })
     }
@@ -69,8 +88,26 @@ export function OnDisconnect() {
     }
 }
 
+
+export function OnEventError() {
+    return function(target: any, key: string) {
+        socketGroups.push({
+            channel: SocketChannel.Event,
+            callback: function() {
+                io.on("connection", (socket) => socket.on("error", (error) => onEventCatcher(socket, error, target[key])))
+            }
+        })
+    }
+}
+
 export default class SocketServer {
     constructor() {
+        // register socket middleware
+        socketMiddlewares = socketMiddlewares.sort((a: any, b: any) => a.position - b.position)
+        for (let i = 0; i < socketMiddlewares.length; i++) {
+            const socket = socketMiddlewares[i];
+            socket.callback()
+        }
         let countConnection = 0
         for (let i = 0; i < socketGroups.length; i++) {
             const socket = socketGroups[i];

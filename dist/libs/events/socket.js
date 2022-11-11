@@ -24,6 +24,16 @@ class Event {
             console.log("connected:", socketId);
         });
     }
+    // @OnEventMiddleware(1)
+    // async auth(socket: Socket, next: any): Promise<void> {
+    //     next()
+    // }
+    onError(error, socket) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(socket.id);
+            console.log("error: ", error.message);
+        });
+    }
     disconnect(socket) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log("Disconnected:", socket.id);
@@ -32,7 +42,7 @@ class Event {
     chat(payload, socket) {
         return __awaiter(this, void 0, void 0, function* () {
             console.log(payload);
-            socket_1.io.to(socket.id).emit("message", "You're connected");
+            console.log(socket.id);
             // your logic here
         });
     }
@@ -47,6 +57,9 @@ class Event {
 __decorate([
     (0, socket_1.OnConnection)()
 ], Event.prototype, "onConnection", null);
+__decorate([
+    (0, socket_1.OnEventError)()
+], Event.prototype, "onError", null);
 __decorate([
     (0, socket_1.OnDisconnect)()
 ], Event.prototype, "disconnect", null);

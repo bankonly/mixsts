@@ -33,15 +33,26 @@ const router_1 = __importDefault(require("./router"));
 const cors_1 = __importDefault(require("cors"));
 const socket_1 = __importStar(require("./socket"));
 const errors_1 = require("./errors");
+const database_1 = __importStar(require("./database"));
 class MixServer {
     constructor() {
+        var _a, _b;
+        // check database connection
+        if ((_a = config_1.coreConfig === null || config_1.coreConfig === void 0 ? void 0 : config_1.coreConfig.database) === null || _a === void 0 ? void 0 : _a.host) {
+            (0, database_1.setDatabaseConfig)(config_1.coreConfig.database);
+            const db = new database_1.default();
+            db.connect();
+        }
         // enableRequestLog from client request
-        if (config_1.coreConfig.enableRequestLog === true) {
+        if (config_1.coreConfig.enableRequestLog) {
             app_1.app.use((0, morgan_1.default)("dev"));
         }
         // default cors from useDefaultCors
         if (config_1.coreConfig.useDefaultCors === true) {
             app_1.app.use((0, cors_1.default)());
+        }
+        if ((config_1.coreConfig === null || config_1.coreConfig === void 0 ? void 0 : config_1.coreConfig.uses) && config_1.coreConfig.uses.length > 0) {
+            app_1.app.use((_b = config_1.coreConfig === null || config_1.coreConfig === void 0 ? void 0 : config_1.coreConfig.uses) !== null && _b !== void 0 ? _b : []);
         }
         // router mapping
         const contextRouter = new router_1.default();

@@ -6,17 +6,28 @@ import ContextRouter from "./router";
 import cors from "cors"
 import SocketServer, { useSocket } from "./socket";
 import { recovery } from "./errors";
+import DBConnection, { setDatabaseConfig } from "./database";
 
 export default class MixServer {
     constructor() {
+        // check database connection
+        if (coreConfig?.database?.host) {
+            setDatabaseConfig(coreConfig.database)
+            const db = new DBConnection()
+            db.connect()
+        }
         // enableRequestLog from client request
-        if (coreConfig.enableRequestLog === true) {
+        if (coreConfig.enableRequestLog) {
             app.use(morgan("dev"))
         }
 
         // default cors from useDefaultCors
         if (coreConfig.useDefaultCors === true) {
             app.use(cors())
+        }
+
+        if (coreConfig?.uses && coreConfig.uses.length > 0) {
+            app.use(coreConfig?.uses ?? [])
         }
 
         // router mapping
