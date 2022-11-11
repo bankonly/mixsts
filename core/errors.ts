@@ -1,13 +1,17 @@
 import { NextFunction, Request, Response } from "express";
+import { coreConfig } from "./config";
 
 export function recovery(error: any, _: Request, res: Response, next: NextFunction): void {
     if (!error) return next() // if there is no error
 
     // handler error
     let statusCode: number = error.statusCode ?? 500
-    let errorMessage: string = error.msg ?? error.message ?? "Internal server error"
-
-    res.status(statusCode).json({ message: errorMessage })
+    let errorMessage: string = error.msg ?? "Internal server error"
+    let detail = error.message ?? undefined
+    if (!coreConfig.enableRequestLog?.detail) {
+        detail = undefined
+    }
+    res.status(statusCode).json({ message: errorMessage, detail })
 }
 
 interface ErrorOption {
@@ -27,18 +31,18 @@ export class CustomError extends Error {
 export class BadRequest extends Error {
     statusCode: number
     msg: string
-    constructor(opts?: ErrorOption) {
+    constructor(message?: string) {
         super()
         this.statusCode = 400
-        this.msg = opts?.message ?? "Bad request"
+        this.msg = message ?? "Bad request"
     }
 }
 export class Unauthorized extends Error {
     statusCode: number
     msg: string
-    constructor(opts?: ErrorOption) {
+    constructor(message?: string) {
         super()
         this.statusCode = 401
-        this.msg = opts?.message ?? "Unauthorized"
+        this.msg = message ?? "Unauthorized"
     }
 }

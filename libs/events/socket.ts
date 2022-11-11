@@ -1,4 +1,5 @@
-import { io, OnConnection, OnDisconnect, OnEvent } from "@mix/socket";
+import { OnConnection, OnDisconnect, OnEvent, OnEventError } from "@mix/socket";
+import { Socket } from "socket.io";
 
 export default class Event {
     @OnConnection()
@@ -6,6 +7,18 @@ export default class Event {
         const socketId = socket.id // socket id
         socket.context = socket.handshake.auth
         console.log("connected:", socketId)
+    }
+
+    // @OnEventMiddleware(1)
+    // async auth(socket: Socket, next: any): Promise<void> {
+    //     next()
+    // }
+
+
+    @OnEventError()
+    async onError(error: any, socket: Socket): Promise<void> {
+        console.log(socket.id)
+        console.log("error: ", error.message)
     }
 
     @OnDisconnect()
@@ -16,7 +29,7 @@ export default class Event {
     @OnEvent("chat")
     async chat(payload: any, socket: any): Promise<void> {
         console.log(payload)
-        io.to(socket.id).emit("message", "You're connected")
+        console.log(socket.id)
         // your logic here
     }
 

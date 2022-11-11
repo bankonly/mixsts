@@ -1,15 +1,21 @@
+import { RequestHandler } from "express"
 import { ControllerConfig } from "./controller"
-import { SocketOption } from "./options"
+import { DatabaseConfig, SocketOption } from "./options"
 
-// Socket configuration
+interface EnableRequestLogOpts {
+    detail?: boolean
+}
 
 // core configuration inside application
 export interface CoreConfig {
     port: number
-    enableRequestLog?: boolean
+    enableRequestLog?: EnableRequestLogOpts
     socket?: SocketOption
     useDefaultCors?: boolean
     controllerConfig: ControllerConfig
+    database?: DatabaseConfig
+    uses?: RequestHandler[]
+
 }
 
 // global config variable
