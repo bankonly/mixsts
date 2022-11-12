@@ -37,5 +37,11 @@ setCoreConfig({
         host: "mongodb+srv://bank:Bank211998Tsc_@cluster0.ih5kz.mongodb.net/terena_core?retryWrites=true&w=majority",
         // Uncomment to add mongo db connection option
         // connectionOption: {}
+    },
+
+    // S3 instance
+    awsConfig: {
+        accessKeyId: "",
+        secretKeyId: "we"
     }
 })

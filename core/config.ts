@@ -1,7 +1,7 @@
 import { RequestHandler } from "express"
 import { ControllerConfig } from "./controller"
 import { ModelConfig } from "./model"
-import { DatabaseConfig, SocketOption } from "./options"
+import { AwsConfig, DatabaseConfig, SocketOption } from "./options"
 
 interface EnableRequestLogOpts {
     detail?: boolean
@@ -17,7 +17,7 @@ export interface CoreConfig {
     modelConfig?: ModelConfig
     database?: DatabaseConfig
     uses?: RequestHandler[]
-
+    awsConfig?: AwsConfig
 }
 
 // global config variable

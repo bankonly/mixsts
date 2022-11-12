@@ -1,14 +1,12 @@
 import AWS from "aws-sdk"
 import { v4 as uuid } from "uuid"
 import sharp from "sharp"
+import { AwsConfig } from "./options";
+import { BadRequest } from "./errors";
 
-export interface AwsConfig {
-    accessKeyId: string
-    secretKeyId: string
-}
-export let S3Instance: AWS.S3
+export let AwsS3: AWS.S3
 export function setAwsConfig(config: AwsConfig) {
-    S3Instance = new AWS.S3({
+    AwsS3 = new AWS.S3({
         accessKeyId: config.accessKeyId,
         secretAccessKey: config.secretKeyId
     });
@@ -23,107 +21,108 @@ export interface UploadFileOption {
     outputFilenameOnly?: boolean
 
 }
-const uploadFile = async (opts: UploadFileOption) => {
+export const uploadFile = async (opts: UploadFileOption): Promise<string> => {
     try {
-        let only_file_name = file_name || uuid() + Date.now() + "." + fileType;
-        if (origin_filename) {
-            only_file_name = file.name
+        let filenameOnly = opts.name || uuid() + Date.now()
+
+        let format = opts.format ?? opts.file.mimetype.split("/")[1]
+
+        filenameOnly = filenameOnly + "." + format
+
+        if (opts.originalFilename === true) {
+            filenameOnly = opts.file.name
         }
 
-        const fileName = path + only_file_name
+        const fileName = opts.path + filenameOnly
 
         // Setting up S3 upload parameters
         const option = {
-            Bucket: bucket,
+            Bucket: opts.bucket,
             Key: fileName,
-            Body: file.data,
+            Body: opts.file.data,
         };
 
         // Uploading files to the bucket
-        if (complete) {
-            await awsConfig.upload(option).promise();
-        } else {
-            awsConfig.upload(option).promise();
-        }
+        AwsS3.upload(option).promise();
 
-        if (return_only_name) return only_file_name
+        if (filenameOnly) return filenameOnly
         return fileName;
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(error.message);
     }
 };
 
-const uploadMany = async ({ file, bucket = process.env.AWS_S3_BUCKET_NAME, fileType = "jpg", path, resize, complete = false }) => {
+export interface UploadOption {
+    file: any
+    bucket: string
+    name?: string
+    format?: string
+    originalFilename?: boolean
+    path: string
+    resize?: number[]
+}
+
+export const uploadMany = async (opts: UploadOption) => {
     try {
-        if (!Array.isArray(file) || file.length < 1) throw new Error(`400::Multiple file required`)
+        if (!Array.isArray(opts.file) || opts.file.length < 1) throw new BadRequest(`Multiple file required`)
         let result = []
-        for (let i = 0; i < file.length; i++) {
-            const _file = file[i];
-            const filename = await upload({ file: _file, bucket, fileType, path, resize, complete })
+        for (let i = 0; i < opts.file.length; i++) {
+            const _file = opts.file[i];
+            const filename = await upload({ file: _file, bucket: opts.bucket, format: opts.format, path: opts.path, resize: opts.resize })
             result.push(filename)
         }
         return result
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(error.message);
     }
 }
-
-const upload = async ({ file, bucket = process.env.AWS_S3_BUCKET_NAME, fileType = "jpg", path, resize, complete = false }) => {
+export const upload = async (opts: UploadOption) => {
     try {
 
-        if (Array.isArray(file) && file.length > 1) throw new Error(`400::Multiple file not yet support`)
+        if (Array.isArray(opts.file) && opts.file.length > 1) throw new BadRequest(`Multiple file not yet support`)
 
-        const only_file_name = uuid() + Date.now() + "." + fileType;
-        const fileName = path + only_file_name
+        let filenameOnly = opts.name || uuid() + Date.now()
+        let format = opts.format ?? opts.file.mimetype.split("/")[1]
+
+        filenameOnly = filenameOnly + "." + format
+
+        if (opts.originalFilename === true) {
+            filenameOnly = opts.file.name
+        }
+        const fileName = opts.path + filenameOnly
 
         // Setting up S3 upload parameters
         const option = {
-            Bucket: bucket,
+            Bucket: opts.bucket,
             Key: fileName,
-            Body: file.data,
+            Body: opts.file.data,
         };
-        if (complete) {
-            await awsConfig.upload(option).promise();
-        } else {
-            awsConfig.upload(option).promise();
 
-        }
+        AwsS3.upload(option).promise();
 
-        if (Array.isArray(resize)) {
-            for (let i = 0; i < resize.length; i++) {
-                const element = resize[i];
-                const image_resized = await sharp(file.data)
+        if (Array.isArray(opts.resize)) {
+            for (let i = 0; i < opts.resize.length; i++) {
+                const element = opts.resize[i];
+                const image_resized = await sharp(opts.file.data)
                     .resize(element, element, {
                         fit: sharp.fit.inside,
                         withoutEnlargement: true,
                     })
                     .toBuffer()
 
-                const resize_path = path + element + "x" + element + "/" + only_file_name
+                const resize_path = opts.path + element + "x" + element + "/" + filenameOnly
                 const resize_option = {
-                    Bucket: bucket,
+                    Bucket: opts.bucket,
                     Key: resize_path,
                     Body: image_resized,
                 };
-                if (complete) {
-                    await awsConfig.upload(resize_option).promise();
-                } else {
-                    awsConfig.upload(resize_option).promise();
-                }
+                AwsS3.upload(resize_option).promise();
             }
         }
 
-        return only_file_name;
-    } catch (error) {
+        return filenameOnly;
+    } catch (error: any) {
         throw new Error(error.message);
     }
 };
 
-const AwsFunc = {
-    uploadFile,
-    awsConfig,
-    upload,
-    uploadMany
-};
-
-module.exports = AwsFunc;

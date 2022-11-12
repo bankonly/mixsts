@@ -7,6 +7,7 @@ import cors from "cors"
 import SocketServer, { useSocket } from "./socket";
 import { recovery } from "./errors";
 import DBConnection, { setDatabaseConfig } from "./database";
+import { setAwsConfig } from "./aws";
 
 export default class MixServer {
     constructor() {
@@ -19,6 +20,11 @@ export default class MixServer {
         // enableRequestLog from client request
         if (coreConfig.enableRequestLog) {
             app.use(morgan("dev"))
+        }
+
+        // detect aws
+        if (coreConfig.awsConfig) {
+            setAwsConfig(coreConfig.awsConfig)
         }
 
         // default cors from useDefaultCors

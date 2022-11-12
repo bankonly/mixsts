@@ -58,3 +58,7 @@ export interface DatabaseConfig {
     connectionOption?: ConnectOptions
 }
 
+export interface AwsConfig {
+    accessKeyId: string
+    secretKeyId: string
+}
