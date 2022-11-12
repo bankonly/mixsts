@@ -1,7 +1,8 @@
 import { setCoreConfig } from "@mix/config"
+import { DatabaseDriver } from "@mix/options";
 import controllerConfig from "@configs/controllers";
 import socketConfig from "./events";
-import { DatabaseDriver } from "@mix/options";
+import modelConfig from "./models";
 
 // Load all configuration here
 setCoreConfig({
@@ -24,8 +25,12 @@ setCoreConfig({
         // ex: { message:"...",detail:"detail error" }
         detail: true
     },
+
+    /* Load Controller globally */
     controllerConfig: controllerConfig,
 
+    /* Load Model globally */
+    modelConfig: modelConfig,
     // Database configuration with driver support only mongodb now
     database: {
         driver: DatabaseDriver.MongoDB,

@@ -7,6 +7,11 @@ export function Entity(collection: string) {
         constructor.instance = mongoose.model(collection, schema)
     }
 }
+export interface ModelConfig { require: NodeRequire[] }
+export let modelConfig: ModelConfig
+export function loadModel(config: ModelConfig) {
+    modelConfig = config
+}
 export interface ModelSchema extends SchemaDefinition { }
 export interface Instance<T = any> extends Model<T> { }
 export interface ModelOption extends SchemaOptions { }

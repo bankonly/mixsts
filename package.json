@@ -1,18 +1,24 @@
 {
     "dependencies": {
+        "@types/aws-sdk": "^2.7.0",
         "@types/cors": "^2.8.12",
         "@types/express": "^4.17.14",
         "@types/express-fileupload": "^1.4.1",
         "@types/mongoose": "^5.11.97",
         "@types/morgan": "^1.9.3",
+        "@types/sharp": "^0.31.0",
         "@types/socket.io": "^3.0.2",
+        "@types/uuid": "^8.3.4",
+        "aws-sdk": "^2.1252.0",
         "cors": "^2.8.5",
         "express": "^4.18.2",
         "express-fileupload": "^1.4.0",
         "mongoose": "^6.7.2",
         "morgan": "^1.10.0",
+        "sharp": "^0.31.2",
         "socket.io": "^4.5.3",
-        "tsconfig-paths": "^4.1.0"
+        "tsconfig-paths": "^4.1.0",
+        "uuid": "^9.0.0"
     },
     "name": "mixsts",
     "version": "1.0.2",

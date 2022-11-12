@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Entity = void 0;
+exports.loadModel = exports.modelConfig = exports.Entity = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 function Entity(collection) {
     return function (constructor) {
@@ -33,6 +33,10 @@ function Entity(collection) {
     };
 }
 exports.Entity = Entity;
+function loadModel(config) {
+    exports.modelConfig = config;
+}
+exports.loadModel = loadModel;
 class ExtendedModel {
     register(instance) {
         const prototype = instance.prototype;

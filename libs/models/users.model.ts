@@ -2,7 +2,11 @@ import ExtendedModel, { Entity, Instance, ModelInterface, ModelOption, ModelSche
 
 @Entity("admins")
 export default class UserModel extends ExtendedModel implements ModelInterface {
+
+    /* normally datainstance allow only inside repositories
+       uncomment this one to use Model instance globally */
     static instance: Instance
+
     schema: ModelSchema = {
         id: {
             type: String

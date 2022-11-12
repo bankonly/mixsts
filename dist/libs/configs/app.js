@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = require("@mix/config");
+const options_1 = require("@mix/options");
 const controllers_1 = __importDefault(require("@configs/controllers"));
 const events_1 = __importDefault(require("./events"));
-const options_1 = require("@mix/options");
+const models_1 = __importDefault(require("./models"));
 // Load all configuration here
 (0, config_1.setCoreConfig)({
     port: 1999,
@@ -26,7 +27,10 @@ const options_1 = require("@mix/options");
         // ex: { message:"...",detail:"detail error" }
         detail: true
     },
+    /* Load Controller globally */
     controllerConfig: controllers_1.default,
+    /* Load Model globally */
+    modelConfig: models_1.default,
     // Database configuration with driver support only mongodb now
     database: {
         driver: options_1.DatabaseDriver.MongoDB,
