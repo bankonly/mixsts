@@ -14,7 +14,6 @@ export default class Event {
     //     next()
     // }
 
-
     @OnEventError()
     async onError(error: any, socket: Socket): Promise<void> {
         console.log(socket.id)

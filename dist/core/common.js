@@ -15,6 +15,7 @@ function catcher(handler, opts) {
             params: req.params,
             req, res, next,
             response: response,
+            files: req.files,
             json: (arg) => res.json(arg),
             emit: (arg) => response.emit(arg)
         };

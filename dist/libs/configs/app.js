@@ -11,6 +11,8 @@ const models_1 = __importDefault(require("./models"));
 // Load all configuration here
 (0, config_1.setCoreConfig)({
     port: 1999,
+    // express fileupload config
+    bindFormData: true,
     // use middlewares
     uses: [
     // example: cors() ---> from cors packages
@@ -37,5 +39,10 @@ const models_1 = __importDefault(require("./models"));
         host: "mongodb+srv://bank:Bank211998Tsc_@cluster0.ih5kz.mongodb.net/terena_core?retryWrites=true&w=majority",
         // Uncomment to add mongo db connection option
         // connectionOption: {}
+    },
+    // S3 instance
+    awsConfig: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretKeyId: process.env.AWS_SECRET_KEY_ID
     }
 });

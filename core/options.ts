@@ -12,6 +12,7 @@ export interface Context<Body = any, Query = any, Headers = any, Params = any> {
     next: NextFunction
     response: ApiResponse
     json: any
+    files: any
     emit: ((data: any) => ApiResponse)
 }
 
@@ -59,6 +60,6 @@ export interface DatabaseConfig {
 }
 
 export interface AwsConfig {
-    accessKeyId: string
-    secretKeyId: string
+    accessKeyId?: string
+    secretKeyId?: string
 }

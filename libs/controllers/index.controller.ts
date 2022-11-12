@@ -1,12 +1,13 @@
-import { Controller, Get } from "@mix/context";
+import { Controller, Get, Post } from "@mix/context";
 import { Context } from "@mix/options"
+import UserModel from "@models/users.model";
 
 @Controller("index")
 export default class IndexController {
-    @Get("/", { ioEmit: "index" })
+    @Get("/")
     async index(context: Context): Promise<void> {
-        context.emit("When enable ioEmit in decorator")
-        context.json("kkkSimeple response")
+        const result = await UserModel.query.select("email").exec(context.req)
+        context.json(result)
     }
 }
 

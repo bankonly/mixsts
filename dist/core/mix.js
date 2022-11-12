@@ -34,6 +34,8 @@ const cors_1 = __importDefault(require("cors"));
 const socket_1 = __importStar(require("./socket"));
 const errors_1 = require("./errors");
 const database_1 = __importStar(require("./database"));
+const aws_1 = require("./aws");
+const express_fileupload_1 = __importDefault(require("express-fileupload"));
 class MixServer {
     constructor() {
         var _a, _b;
@@ -43,9 +45,16 @@ class MixServer {
             const db = new database_1.default();
             db.connect();
         }
+        // express fileupload
+        if (config_1.coreConfig.bindFormData === true)
+            app_1.app.use((0, express_fileupload_1.default)());
         // enableRequestLog from client request
         if (config_1.coreConfig.enableRequestLog) {
             app_1.app.use((0, morgan_1.default)("dev"));
+        }
+        // detect aws
+        if (config_1.coreConfig.awsConfig) {
+            (0, aws_1.setAwsConfig)(config_1.coreConfig.awsConfig);
         }
         // default cors from useDefaultCors
         if (config_1.coreConfig.useDefaultCors === true) {

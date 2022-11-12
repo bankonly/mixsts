@@ -11,6 +11,7 @@ export function recovery(error: any, _: Request, res: Response, next: NextFuncti
     if (!coreConfig.enableRequestLog?.detail) {
         detail = undefined
     }
+    console.log(error)
     res.status(statusCode).json({ message: errorMessage, detail })
 }
 

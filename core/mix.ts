@@ -8,6 +8,7 @@ import SocketServer, { useSocket } from "./socket";
 import { recovery } from "./errors";
 import DBConnection, { setDatabaseConfig } from "./database";
 import { setAwsConfig } from "./aws";
+import fileUpload from "express-fileupload";
 
 export default class MixServer {
     constructor() {
@@ -17,6 +18,9 @@ export default class MixServer {
             const db = new DBConnection()
             db.connect()
         }
+        // express fileupload
+        if (coreConfig.bindFormData === true) app.use(fileUpload())
+
         // enableRequestLog from client request
         if (coreConfig.enableRequestLog) {
             app.use(morgan("dev"))

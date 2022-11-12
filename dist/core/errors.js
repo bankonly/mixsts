@@ -13,6 +13,7 @@ function recovery(error, _, res, next) {
     if (!((_d = config_1.coreConfig.enableRequestLog) === null || _d === void 0 ? void 0 : _d.detail)) {
         detail = undefined;
     }
+    console.log(error);
     res.status(statusCode).json({ message: errorMessage, detail });
 }
 exports.recovery = recovery;

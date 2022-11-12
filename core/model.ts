@@ -1,10 +1,11 @@
 import mongoose, { Model, Schema, SchemaDefinition, SchemaOptions, } from "mongoose"
-
+import Query from "./query"
 export function Entity(collection: string) {
     return function(constructor: any) {
         const model = new constructor()
         const schema = new Schema(model.schema)
         constructor.instance = mongoose.model(collection, schema)
+        constructor.query = Query.model(collection)
     }
 }
 export interface ModelConfig { require: NodeRequire[] }

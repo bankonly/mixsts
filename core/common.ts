@@ -1,9 +1,9 @@
-import { NextFunction, Response, Request } from "express";
+import { NextFunction, Response } from "express";
 import { CatcherOption, Context } from "./options";
 import ApiResponse from "./response";
 
 export function catcher(handler: Function, opts?: CatcherOption): any {
-    return function(req: Request, res: Response, next: NextFunction) {
+    return function(req: any, res: Response, next: NextFunction) {
         const response = new ApiResponse(res, opts?.emitUrl)
         const context: Context = {
             body: req.body,
@@ -12,6 +12,7 @@ export function catcher(handler: Function, opts?: CatcherOption): any {
             params: req.params,
             req, res, next,
             response: response,
+            files: req.files,
             json: (arg: any) => res.json(arg),
             emit: (arg: any) => response.emit(arg)
         }

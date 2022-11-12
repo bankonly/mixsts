@@ -1,3 +1,5 @@
+import { config } from "dotenv"
+config() // Load .env
 import { RequestHandler } from "express"
 import { ControllerConfig } from "./controller"
 import { ModelConfig } from "./model"
@@ -10,6 +12,7 @@ interface EnableRequestLogOpts {
 // core configuration inside application
 export interface CoreConfig {
     port: number
+    bindFormData?: boolean
     enableRequestLog?: EnableRequestLogOpts
     socket?: SocketOption
     useDefaultCors?: boolean

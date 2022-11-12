@@ -1,9 +1,6 @@
 import AWS from "aws-sdk";
-export interface AwsConfig {
-    accessKeyId: string;
-    secretKeyId: string;
-}
-export declare let S3Instance: AWS.S3;
+import { AwsConfig } from "./options";
+export declare let AwsS3: AWS.S3;
 export declare function setAwsConfig(config: AwsConfig): void;
 export interface UploadFileOption {
     file: any;
@@ -14,3 +11,16 @@ export interface UploadFileOption {
     originalFilename?: boolean;
     outputFilenameOnly?: boolean;
 }
+export declare const uploadFile: (opts: UploadFileOption) => Promise<string>;
+export interface UploadOption {
+    file: any;
+    bucket: string;
+    name?: string;
+    format?: string;
+    originalFilename?: boolean;
+    path: string;
+    resize?: number[];
+    finish?: boolean;
+}
+export declare const uploadMany: (opts: UploadOption) => Promise<string[]>;
+export declare const upload: (opts: UploadOption) => Promise<string>;

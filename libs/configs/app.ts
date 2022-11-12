@@ -8,6 +8,9 @@ import modelConfig from "./models";
 setCoreConfig({
     port: 1999,
 
+    // express fileupload config
+    bindFormData: true,
+
     // use middlewares
     uses: [
         // example: cors() ---> from cors packages
@@ -41,7 +44,7 @@ setCoreConfig({
 
     // S3 instance
     awsConfig: {
-        accessKeyId: "",
-        secretKeyId: "we"
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretKeyId: process.env.AWS_SECRET_KEY_ID
     }
 })

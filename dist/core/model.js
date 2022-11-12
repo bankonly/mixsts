@@ -22,14 +22,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loadModel = exports.modelConfig = exports.Entity = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+const query_1 = __importDefault(require("./query"));
 function Entity(collection) {
     return function (constructor) {
         const model = new constructor();
         const schema = new mongoose_1.Schema(model.schema);
         constructor.instance = mongoose_1.default.model(collection, schema);
+        constructor.query = query_1.default.model(collection);
     };
 }
 exports.Entity = Entity;

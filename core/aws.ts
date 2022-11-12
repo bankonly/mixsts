@@ -51,7 +51,6 @@ export const uploadFile = async (opts: UploadFileOption): Promise<string> => {
         throw new Error(error.message);
     }
 };
-
 export interface UploadOption {
     file: any
     bucket: string
@@ -60,20 +59,20 @@ export interface UploadOption {
     originalFilename?: boolean
     path: string
     resize?: number[]
+    finish?: boolean
 }
-
 export const uploadMany = async (opts: UploadOption) => {
     try {
         if (!Array.isArray(opts.file) || opts.file.length < 1) throw new BadRequest(`Multiple file required`)
         let result = []
         for (let i = 0; i < opts.file.length; i++) {
             const _file = opts.file[i];
-            const filename = await upload({ file: _file, bucket: opts.bucket, format: opts.format, path: opts.path, resize: opts.resize })
+            const filename = await upload({ file: _file, bucket: opts.bucket, format: opts.format, path: opts.path, resize: opts.resize, finish: opts.finish })
             result.push(filename)
         }
         return result
     } catch (error: any) {
-        throw new Error(error.message);
+        throw error
     }
 }
 export const upload = async (opts: UploadOption) => {
@@ -98,7 +97,8 @@ export const upload = async (opts: UploadOption) => {
             Body: opts.file.data,
         };
 
-        AwsS3.upload(option).promise();
+        if (opts.finish === true) await AwsS3.upload(option).promise();
+        else AwsS3.upload(option).promise();
 
         if (Array.isArray(opts.resize)) {
             for (let i = 0; i < opts.resize.length; i++) {
@@ -122,7 +122,7 @@ export const upload = async (opts: UploadOption) => {
 
         return filenameOnly;
     } catch (error: any) {
-        throw new Error(error.message);
+        throw error
     }
 };
 

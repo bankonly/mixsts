@@ -12,6 +12,7 @@ export interface Context<Body = any, Query = any, Headers = any, Params = any> {
     next: NextFunction;
     response: ApiResponse;
     json: any;
+    files: any;
     emit: ((data: any) => ApiResponse);
 }
 export declare enum Method {
@@ -47,4 +48,8 @@ export interface DatabaseConfig {
     driver: DatabaseDriver;
     host: string;
     connectionOption?: ConnectOptions;
+}
+export interface AwsConfig {
+    accessKeyId?: string;
+    secretKeyId?: string;
 }
