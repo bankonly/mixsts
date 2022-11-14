@@ -4,3 +4,4 @@ import MixServer from "@mix/mix"
 const mix = new MixServer()
 
 mix.run()
+

@@ -37,7 +37,7 @@ setCoreConfig({
     // Database configuration with driver support only mongodb now
     database: {
         driver: DatabaseDriver.MongoDB,
-        host: "mongodb+srv://bank:Bank211998Tsc_@cluster0.ih5kz.mongodb.net/terena_core?retryWrites=true&w=majority",
+        host: process.env.MONGO_URI ?? "",
         // Uncomment to add mongo db connection option
         // connectionOption: {}
     },
@@ -45,6 +45,6 @@ setCoreConfig({
     // S3 instance
     awsConfig: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretKeyId: process.env.AWS_SECRET_KEY_ID
+        secretKeyId: "we"
     }
 })
